@@ -1341,7 +1341,7 @@ for_loop_ast(IteratorList, LoopValue, IsReversed, Contents,
     {ParentLoop, TreeWalker3} = resolve_reserved_variable('forloop', TreeWalker2),
 
     %% call for loop (wrapped in a fun to contain the variable L)
-    {{?Q(["begin",
+    {{?Q(["hd([begin",
           "  case erlydtl_runtime:forloop(",
           "    fun (_@Vars, _@Counters) ->",
           "      {_@IteratorVars} = if is_tuple(_@Vars), size(_@Vars) == _@IteratorCount@ -> _@Vars;",
@@ -1354,7 +1354,7 @@ for_loop_ast(IteratorList, LoopValue, IsReversed, Contents,
           "    empty -> _@EmptyContentsAst;",
           "    {L, _} -> L",
           "  end",
-          "end"],
+          "end || _ <- [0]])"],
          [{ifclauses, if IteratorCount > 1 ->
                               ?Q(["() when is_list(_@Vars), length(_@Vars) == _@IteratorCount@ ->",
                                   "  list_to_tuple(_@Vars);",
